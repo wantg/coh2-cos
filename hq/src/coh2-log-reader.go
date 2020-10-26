@@ -30,7 +30,7 @@ func readLog() {
 		return
 	}
 	go func() {
-		t, _ := tail.TailFile(warningsLogPath, tail.Config{Follow: true})
+		t, _ := tail.TailFile(warningsLogPath, tail.Config{Follow: true, Poll: true})
 		for line := range t.Lines {
 			l := strings.TrimSpace(line.Text)
 			if strings.Contains(l, "WorldwideAutomatchService::OnStartComplete - detected successful game start") {
