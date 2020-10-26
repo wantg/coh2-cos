@@ -17,10 +17,16 @@
 
 <body>
     <table id="player-template" style="display: none;">
-        <thead><tr><th colspan="2" class="player-nickname"></th><th>MODE</th><th>RANK</th><th>LEVEL</th><th>STREAK</th><th>WINS</th><th>LOSSES</th><th>RATIO</th><th>TOTAL</th><th>DROPS</th></tr></thead>
+        <thead>
+            <tr><th colspan="2"><a target="_blank"  class="player-link"><span class="player-nickname"></span></a></th>
+            <th>MODE</th><th>RANK</th><th>LEVEL</th><th>STREAK</th><th>WINS</th><th>LOSSES</th><th>RATIO</th><th>TOTAL</th><th>DROPS</th></tr>
+        </thead>
         <tbody>
             <tr>
-                <td rowspan="4"><img class="player-avatar" /></td><td rowspan="4"><img class="faction-icon" /></td>
+                <td rowspan="4">
+                    <a target="_blank"  class="player-link"><img class="player-avatar" /></a>
+                </td>
+                <td rowspan="4"><img class="faction-icon" /></td>
                 <td>1v1</td>
             </tr>
             <tr><td>2v2</td></tr>
@@ -48,6 +54,9 @@
             tmpTable.querySelector('tbody').setAttribute('faction', player.faction);
             tmpTable.querySelector('tbody').setAttribute('steamID', player.steamID);
             tmpTable.querySelector('.player-nickname').innerHTML = player.nickName;
+            for(const link of tmpTable.querySelectorAll('.player-link')){
+                link.setAttribute('href', 'https://www.companyofheroes.com/leaderboards#profile/steam/'+player.steamID+'/standings');
+            }
             tmpTable.querySelector('.player-avatar').setAttribute('src', '/player/'+player.steamID+'/avatar');
             tmpTable.querySelector('.faction-icon').setAttribute('src', 'http://www.companyofheroes.com/sites/all/modules/custom/reliclink/img/races/md_'+['german','soviet','west_german','aef','british'].indexOf(player.faction)+'.png');
             if (player.side == 0){
