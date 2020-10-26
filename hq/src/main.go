@@ -66,7 +66,7 @@ func main() {
 		c.PureJSON(http.StatusOK, _players)
 	})
 
-	r.GET("/player/:steamID/avatar", func(c *gin.Context) {
+	r.GET("/player/:steamID/profile", func(c *gin.Context) {
 		steamID := c.Param("steamID")
 		resp, err := http.Get(`https://coh2-api.reliclink.com/community/external/proxysteamuserrequest?title=coh2&profileNames=["/steam/` + steamID + `"]&request=/ISteamUser/GetPlayerSummaries/v0002/`)
 		if err != nil {
@@ -80,12 +80,13 @@ func main() {
 			return
 		}
 		metadata := gjson.ParseBytes(body)
-		players := metadata.Get("steamResults.response.players").Array()
-		if len(players) == 0 {
-			c.PureJSON(http.StatusOK, gin.H{"result": 3})
-			return
-		}
-		c.Redirect(http.StatusMovedPermanently, players[0].Get("avatarfull").String())
+		// players := metadata.Get("steamResults.response.players").Array()
+		// if len(players) == 0 {
+		// 	c.PureJSON(http.StatusOK, gin.H{"result": 3})
+		// 	return
+		// }
+		c.PureJSON(http.StatusOK, gin.H{"result": 0, "data": metadata.Value()})
+		// c.Redirect(http.StatusMovedPermanently, players[0].Get("avatarfull").String())
 	})
 
 	r.GET("/player/:steamID/ranking", func(c *gin.Context) {
