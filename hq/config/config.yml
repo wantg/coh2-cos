@@ -1,0 +1,4 @@
+app:
+  listen: 0.0.0.0:25416
+coh2:
+  doc-path: 'C:\Users\Clint\Documents\My Games\Company of Heroes 2'
