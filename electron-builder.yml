@@ -1,0 +1,28 @@
+artifactName: ${productName}-${os}.${ext}
+# https://www.electron.build/file-patterns#file-macros
+mac:
+  icon: assets/logo.png
+  extraFiles:
+    - from: dist/hq/hq
+      to: MacOS/hq
+  appId: com.electron.electron-quick-start
+  category: your.app.category.type
+  identity: null
+  target:
+    - target: 7z
+      arch:
+        - x64
+win:
+  icon: assets/logo.ico
+  extraFiles:
+    - from: dist/hq
+      to: hq
+      filter:
+        - '**/*'
+  target:
+    # - target: 7z
+    #   arch:
+    #     - x64
+    - target: portable
+      arch:
+        - x64
