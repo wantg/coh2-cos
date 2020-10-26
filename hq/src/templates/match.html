@@ -4,20 +4,42 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>COH2 Match</title>
+    <title>COH2 COS</title>
     <link rel="stylesheet" href="/assets/node_modules/bulma/css/bulma.min.css">
     <link rel="stylesheet" href="/assets/flag.css">
     <style>
-        #left-side-players,
-        #right-side-players {
-            flex: 1;
-            padding: 8px
+        #left-side-players, #right-side-players {
+            flex: 1;padding: 8px
         }
         #left-side-players {
             padding-right: 4px
         }
         #right-side-players {
             padding-left: 4px
+        }
+        .player-summary {
+            padding-top: 20px;
+        }
+        .player-summary a {
+            display: block;
+        }
+        .player-summary > .avatar {
+            float: left; padding: 0 10px 0 0;
+        }
+        .player-summary > .nickname {
+            float: left; line-height: 31px;
+        }
+        .player-summary > .faction {
+            float: right;
+        }
+        .player-summary.right > .avatar {
+            float: right; padding: 0 0 0 10px;
+        }
+        .player-summary.right > .nickname {
+            float: right; text-align: right;
+        }
+        .player-summary.right > .faction {
+            float: left;
         }
         .player-avatar {
             width: 64px;
@@ -32,93 +54,78 @@
 </head>
 
 <body>
-    <table id="player-template" style="display: none;">
-        <thead>
-            <tr>
-                <th colspan="2"><a target="_blank" class="player-link"><span class="player-nickname"></span></a></th>
-                <th>MODE</th>
-                <th>RANK</th>
-                <th>LEVEL</th>
-                <th>STREAK</th>
-                <th>WINS</th>
-                <th>LOSSES</th>
-                <th>RATIO</th>
-                <th>TOTAL</th>
-                <th>DROPS</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan="4">
-                    <a target="_blank" class="player-link" style="display: block;">
-                        <img class="player-avatar" />
-                        <div class="f32"><span class="flag" title=""></span></div>
-                    </a>
-                </td>
-                <td rowspan="4"><img class="faction-icon" /></td>
-                <td>1v1</td>
-            </tr>
-            <tr>
-                <td>2v2</td>
-            </tr>
-            <tr>
-                <td>3v3</td>
-            </tr>
-            <tr>
-                <td>4v4</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="player-template" style="display: none;">
+        <div class="player-summary">
+            <div class="avatar">
+                <a target="_blank" class="player-link">
+                    <img class="player-avatar" />
+                </a>
+            </div>
+            <div class="nickname">
+                <a target="_blank" class="player-link">
+                    <p class="player-nickname"></p>
+                    <div class="f32"><span class="flag"></span></div>
+                </a>
+            </div>
+            <div class="faction">
+                <img class="faction-icon" />
+            </div>
+        </div>
+        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <thead>
+                <tr>
+                    <th>MODE</th>
+                    <th>RANK</th>
+                    <th>LEVEL</th>
+                    <th>STREAK</th>
+                    <th>WINS</th>
+                    <th>LOSSES</th>
+                    <th>RATIO</th>
+                    <th>TOTAL</th>
+                    <th>DROPS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1v1</td></tr>
+                <tr><td>2v2</td></tr>
+                <tr><td>3v3</td></tr>
+                <tr><td>4v4</td></tr>
+            </tbody>
+        </table>
+    </div>
     <div style="display: flex;">
-        <div id="left-side-players">
-            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth"></table>
-        </div>
-        <div id="right-side-players">
-            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth"></table>
-        </div>
+        <div id="left-side-players"></div>
+        <div id="right-side-players"></div>
     </div>
     <script>
         function buildMatchPlayerView(player) {
-            let playerView = document.querySelector('#player-template').innerHTML;
-            let tmpTable = document.createElement('table');
-            tmpTable.innerHTML = playerView;
-            let rows = tmpTable.querySelectorAll('tbody>tr');
+            let playerView = document.createElement('div');
+            playerView.innerHTML = document.querySelector('#player-template').innerHTML;
+            playerView.setAttribute('class', 'player-stat');
+            playerView.setAttribute('faction', player.faction);
+            playerView.setAttribute('steamID', player.steamID);
+            playerView.querySelector('.player-nickname').innerHTML = player.nickName;
+            for (const link of playerView.querySelectorAll('.player-link')) {
+                link.setAttribute('href', 'https://www.companyofheroes.com/leaderboards#profile/steam/' + player.steamID + '/standings');
+            }
+            playerView.querySelector('.faction-icon').setAttribute('src', 'http://www.companyofheroes.com/sites/all/modules/custom/reliclink/img/races/md_' 
+                + ['german', 'soviet', 'west_german', 'aef', 'british'].indexOf(player.faction) + '.png');
+            let rows = playerView.querySelectorAll('table>tbody>tr');
             for (const row of rows) {
                 row.innerHTML += '<td class="rank">-</td><td class="rankLevel">-</td><td class="streak">-</td><td class="wins">-</td><td class="losses">-</td><td class="ratio">-</td><td class="total">-</td><td class="drops">-</td>'
             }
-            tmpTable.querySelector('tbody').setAttribute('faction', player.faction);
-            tmpTable.querySelector('tbody').setAttribute('steamID', player.steamID);
-            tmpTable.querySelector('.player-nickname').innerHTML = player.nickName;
-            for (const link of tmpTable.querySelectorAll('.player-link')) {
-                link.setAttribute('href', 'https://www.companyofheroes.com/leaderboards#profile/steam/' + player.steamID + '/standings');
-            }
-            tmpTable.querySelector('.faction-icon').setAttribute('src', 'http://www.companyofheroes.com/sites/all/modules/custom/reliclink/img/races/md_' + ['german', 'soviet', 'west_german', 'aef', 'british'].indexOf(player.faction) + '.png');
             if (player.side == 0) {
-                document.querySelector('#left-side-players>table').insertAdjacentHTML('beforeend', tmpTable.innerHTML);
+                document.querySelector('#left-side-players').insertAdjacentElement('beforeend', playerView);
             } else {
-                let s = [];
-                let columns = tmpTable.querySelectorAll('thead>tr>th');
-                for (const column of columns) {
-                    s.push(column.outerHTML)
-                }
-                s.push(s.shift())
-                tmpTable.querySelector('thead>tr').innerHTML = s.join('');
-                s = [];
-                columns = tmpTable.querySelectorAll('tbody>tr')[0].querySelectorAll('td');
-                for (const column of columns) {
-                    s.push(column.outerHTML)
-                }
-                const first = s.shift()
-                s.push(s.shift())
-                s.push(first)
-                tmpTable.querySelectorAll('tbody>tr')[0].innerHTML = s.join('');
-                document.querySelector('#right-side-players>table').insertAdjacentHTML('beforeend', tmpTable.innerHTML);
+                const summaryContainer = playerView.querySelector('.player-summary');
+                summaryContainer.classList.add('right');
+                document.querySelector('#right-side-players').insertAdjacentElement('beforeend', playerView);
             }
         }
         function loadPlayersStat() {
-            for (const tbody of document.querySelectorAll('tbody')) {
-                const steamID = tbody.getAttribute('steamID');
-                const faction = tbody.getAttribute('faction');
+            for (const ele of document.querySelectorAll('.player-stat')) {
+                const steamID = ele.getAttribute('steamID');
+                const faction = ele.getAttribute('faction');
                 if (steamID && faction) {
                     fetch('/player/' + steamID + '/profile')
                         .then(response => response.json())
@@ -126,12 +133,12 @@
                             const d = data.data;
                             try {
                                 const avatarURL = d.steamResults.response.players[0].avatarfull;
-                                tbody.querySelector('.player-avatar').setAttribute('src', avatarURL);
+                                ele.querySelector('.player-avatar').setAttribute('src', avatarURL);
                             } catch (error) { }
                             try {
                                 const country = d.avatars[0].country;
-                                tbody.querySelector('.flag').classList.add(country);
-                                tbody.querySelector('.flag').setAttribute('title', country);
+                                ele.querySelector('.flag').classList.add(country);
+                                ele.querySelector('.flag').setAttribute('title', country);
                             } catch (error) { }
                         });
                     fetch('/player/' + steamID + '/ranking')
@@ -145,15 +152,12 @@
                                 aef: [d[7], d[11], d[15], d[19]],
                                 british: [d[51], d[52], d[53], d[54]],
                             }[faction]
-                            // if (faction == 'aef') {
-                            //     console.log(statData);
-                            // }
                             for (const idx in statData) {
                                 const d = statData[idx];
                                 if (!d) {
                                     continue;
                                 }
-                                const tr = tbody.querySelectorAll('tr')[idx];
+                                const tr = ele.querySelectorAll('tbody>tr')[idx];
                                 tr.querySelector('td.rank').innerHTML = d.rank == -1 ? '-' : d.rank;
                                 tr.querySelector('td.rankLevel').innerHTML = d.rankLevel == 0 ? '-' : d.rankLevel;
                                 tr.querySelector('td.streak').innerHTML = d.streak > 0 ? '+' + d.streak : d.streak;
@@ -173,8 +177,8 @@
                 .then(data => {
                     const _matchID = JSON.stringify(data)
                     if (window.matchID != _matchID) {
-                        document.querySelector('#left-side-players>table').innerHTML = '';
-                        document.querySelector('#right-side-players>table').innerHTML = '';
+                        document.querySelector('#left-side-players').innerHTML = '';
+                        document.querySelector('#right-side-players').innerHTML = '';
                         for (const player of data) {
                             // player.steamID = '76561198046481660';
                             buildMatchPlayerView(player)
