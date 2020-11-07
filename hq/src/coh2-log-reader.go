@@ -24,7 +24,15 @@ type player struct {
 var players = map[string]player{}
 
 func readLog() {
-	docPath, _ := filepath.Abs(viper.GetString("coh2.doc-path"))
+	// docPath, _ := filepath.Abs(viper.GetString("coh2.doc-path"))
+	docPath := viper.GetString("coh2.doc-path")
+	sysVarList := []string{"USERPROFILE"}
+	for _, v := range sysVarList {
+		_v := "%" + v + "%"
+		if strings.Contains(docPath, _v) {
+			docPath = strings.ReplaceAll(docPath, _v, os.Getenv(v))
+		}
+	}
 	warningsLogPath := filepath.Join(docPath, "warnings.log")
 	if _, err := os.Stat(warningsLogPath); os.IsNotExist(err) {
 		return
