@@ -4,7 +4,7 @@ mkdir dist
 cd hq/src
 # go build -o ../dist/hq/hq .
 go generate
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ../../dist/hq/hq.exe .
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags -H=windowsgui -o ../../dist/hq/hq.exe .
 cp -r ../assets ../../dist/hq
 cp -r ../config/config.yml ../../dist/config.yml
 

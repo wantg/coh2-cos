@@ -42,9 +42,9 @@
       "all": true
     },
     "window": {
-      "title": "Tauri App",
-      "width": 800,
-      "height": 600,
+      "title": "COH2 COS",
+      "width": 1280,
+      "height": 1080,
       "resizable": true,
       "fullscreen": false
     },
