@@ -49,7 +49,10 @@ fn start_hq1(){
 }
 
 fn main() {
-  thread::spawn(move || { start_hq(); });
+  // thread::spawn(move || { start_hq(); });
+  if cfg!(target_os = "windows") {
+    Command::new("hq\\hq.exe").args(&["-c", "config.yml"]).spawn();
+  }
 
   println!("{}", "main.rs");
   tauri::AppBuilder::new()
