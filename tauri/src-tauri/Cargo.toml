@@ -1,11 +1,11 @@
 [package]
 name = "some"
 version = "0.1.0"
-description = "A Tauri App"
+description = "COH2-COS"
 authors = [ "you" ]
 license = ""
 repository = ""
-default-run = "some"
+default-run = "COH2-COS"
 edition = "2018"
 build = "src/build.rs"
 
@@ -22,5 +22,5 @@ embedded-server = [ "tauri/embedded-server" ]
 no-server = [ "tauri/no-server" ]
 
 [[bin]]
-name = "some"
+name = "COH2-COS"
 path = "src/main.rs"

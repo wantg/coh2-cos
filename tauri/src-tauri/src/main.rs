@@ -50,8 +50,11 @@ fn start_hq1(){
 
 fn main() {
   // thread::spawn(move || { start_hq(); });
+  let cmd;
   if cfg!(target_os = "windows") {
-    Command::new("hq\\hq.exe").args(&["-c", "config.yml"]).spawn();
+    cmd = Command::new("hq\\hq.exe").args(&["-c", "config.yml"]).spawn();
+  } else {
+    cmd = Command::new("sh").arg("-c").arg("echo hello").spawn();
   }
 
   println!("{}", "main.rs");
@@ -76,4 +79,12 @@ fn main() {
     })
     .build()
     .run();
+    
+    if cfg!(target_os = "windows") {
+      if let Ok(mut child) = cmd {
+        child.kill().expect("command wasn't running");
+      } else {
+        println!("yes command didn't start");
+      }
+    }
 }
